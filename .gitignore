@@ -1,0 +1,5 @@
+web/certs/*.pem
+web/certs/*.crt
+.env
+*/config
+google-immich-sync

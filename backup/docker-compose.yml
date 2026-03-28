@@ -1,0 +1,41 @@
+version: "3.8"
+
+services:
+  backrest:
+    image: garethgeorge/backrest:latest
+    container_name: backrest
+    hostname: backrest
+    user: "1000:1000"
+    volumes:
+      # Configuration and data persistence Focusing only on IMMICH for now
+      - ./config/data:/data
+      - ./config/config:/config
+      - ./config/cache:/cache
+      - /tmp:/tmp
+      - ./config/rclone:/root/.config/rclone  # For rclone remote configs
+      - ${IMMICH_UPLOAD_LOCATION}/backups:/immich/db-backup
+      - ${IMMICH_UPLOAD_LOCATION}/library:/immich/library
+      
+      
+    environment:
+      - BACKREST_PORT=0.0.0.0:9898
+      - BACKREST_DATA=/data
+      - BACKREST_CONFIG=/config/config.json
+      - XDG_CACHE_HOME=/cache
+      - TMPDIR=/tmp
+      - TZ=Etc/UTC
+      - PUID=1000
+      - PGID=1000
+      
+    ports:
+      - "9898:9898"
+      
+    restart: unless-stopped
+    
+    networks:
+      - media
+
+networks:
+  media:
+    external: false
+
